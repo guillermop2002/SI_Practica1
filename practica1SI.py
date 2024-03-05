@@ -20,8 +20,7 @@ cursorObj.execute('''CREATE TABLE IF NOT EXISTS legal_data (
 
 cursorObj.execute('''
     CREATE TABLE IF NOT EXISTS users_data (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT,
+        username TEXT PRIMARY KEY,
         telefono INTEGER,
         contrasena TEXT,
         provincia TEXT,
