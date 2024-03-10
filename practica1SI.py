@@ -2,6 +2,8 @@ import sqlite3
 import pandas
 import json
 
+import pandas as pd
+
 # Crear una conexión a la base de datos
 con = sqlite3.connect('etl_database.db')
 cursorObj = con.cursor()
@@ -55,7 +57,7 @@ with open('users_data_online.json') as file:
         cursorObj.execute('''
             INSERT INTO users_data (username, telefono, contrasena, provincia, permisos, total_emails, phishing_emails, cliclados_emails, fechas, ips)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (
+            ''', (
             username,
             user_data['telefono'],
             user_data['contrasena'],
@@ -84,5 +86,11 @@ users_data_rows = cursorObj.fetchall()
 print("\nDatos de users_data: ")
 for row in users_data_rows:
     print(row)
+
+df_legalData = pd.read_sql_query("SELECT * FROM legal_data", con)
+df_usersData = pd.read_sql_query("SELECT * FROM users_data", con)
+
+print(df_legalData)
+print(df_usersData)
 
 con.close()
