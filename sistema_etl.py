@@ -42,6 +42,17 @@ CREATE TABLE IF NOT EXISTS IPs (
 )
 ''')
 
+# Tabla Legal
+c.execute('''
+CREATE TABLE IF NOT EXISTS Legal (
+    web TEXT PRIMARY KEY,
+    cookies INTEGER,
+    aviso INTEGER,
+    proteccion_de_datos INTEGER,
+    creacion DATE
+)
+''')
+
 
 conn.commit()
 conn.close()
