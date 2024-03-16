@@ -3,7 +3,6 @@ import sqlite3
 conn = sqlite3.connect('etl_system.db')
 c = conn.cursor()
 
-# Tabla Usuarios
 c.execute('''
 CREATE TABLE IF NOT EXISTS Usuarios (
     username TEXT PRIMARY KEY,
@@ -14,7 +13,6 @@ CREATE TABLE IF NOT EXISTS Usuarios (
 )
 ''')
 
-# Tabla Emails relacionada con Usuarios
 c.execute('''
 CREATE TABLE IF NOT EXISTS Emails (
     id INTEGER PRIMARY KEY,
@@ -26,7 +24,6 @@ CREATE TABLE IF NOT EXISTS Emails (
 )
 ''')
 
-# Tabla Fechas relacionada con Usuarios
 c.execute('''
 CREATE TABLE IF NOT EXISTS Fechas (
     id INTEGER PRIMARY KEY,
@@ -36,7 +33,6 @@ CREATE TABLE IF NOT EXISTS Fechas (
 )
 ''')
 
-# Tabla IPs relacionada con Usuarios
 c.execute('''
 CREATE TABLE IF NOT EXISTS IPs (
     id INTEGER PRIMARY KEY,
