@@ -1,8 +1,9 @@
 import sqlite3
 import pandas
 import json
-
+import plotly.express as px
 import pandas as pd
+
 
 # Crear una conexión a la base de datos
 con = sqlite3.connect('etl_database.db')
@@ -93,4 +94,7 @@ df_usersData = pd.read_sql_query("SELECT * FROM users_data", con)
 print(df_legalData)
 print(df_usersData)
 
+
 con.close()
+
+
