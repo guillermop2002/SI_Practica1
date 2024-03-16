@@ -66,7 +66,7 @@ with open('users_data_online.json') as file:
             user_data['permisos'],
             user_data['emails']['total'],
             user_data['emails']['phishing'],
-            user_data['emails']['cliclados'],
+            user_data['emails']['clicados'],
             json.dumps(user_data['fechas']),
             json.dumps(user_data['ips'])
         ))
