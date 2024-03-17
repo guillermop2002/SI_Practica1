@@ -6,6 +6,30 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
+
+def grafico_pass():
+
+    conn = sqlite3.connect('etl_database.db')
+
+    users_data = pd.read_sql_query("SELECT * FROM users_data", conn, parse_dates=['fechas'])
+
+    usuarios = users_data[users_data['permisos'] == 0]
+    admins = users_data[users_data['permisos'] == 1]
+
+    time_usuarios = usuarios.groupby('username')['fechas'].diff().mean()
+    time_admins = admins.groupby('username')['fechas'].diff().mean()
+
+    time_df = pd.DataFrame({'Tipo de Usuario': ['Normal', 'Administrador'],'Tiempo entre Cambios de Contraseña': [time_usuarios.days, time_admins.days]})
+
+    fig = go.Figure(data=go.Bar(x=time_df['Tipo de Usuario'], y=time_df['Tiempo entre Cambios de Contraseña']))
+
+    fig.update_layout(xaxis_title='Tipo de Usuario',yaxis_title='Media de Tiempo')
+
+    conn.close()
+    grafico=fig.to_json()
+    return grafico
+
+
 def grafico_usuarios_criticos():
     conn = sqlite3.connect('etl_database.db')
     users_data = pd.read_sql_query("SELECT * FROM users_data", conn)
@@ -80,11 +104,12 @@ def grafico_cumplir_politicas():
 @app.route('/')
 def index():
 
+    grafico = grafico_pass()
     grafico2 = grafico_usuarios_criticos()
     grafico3 = grafico_politicas()
     grafico4 = grafico_cumplir_politicas()
 
-    return render_template('index.html', grafico2=json.dumps(grafico2), grafico3=json.dumps(grafico3), grafico4=json.dumps(grafico4))
+    return render_template('index.html', grafico=json.dumps(grafico), grafico2=json.dumps(grafico2), grafico3=json.dumps(grafico3), grafico4=json.dumps(grafico4))
 
 
 if __name__ == '__main__':
