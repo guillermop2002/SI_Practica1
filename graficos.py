@@ -6,12 +6,19 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
-
 def grafico_pass():
 
     conn = sqlite3.connect('etl_database.db')
 
     users_data = pd.read_sql_query("SELECT * FROM users_data", conn, parse_dates=['fechas'])
+
+    '''fechas=users_data['fechas']
+
+    fechas = fechas.replace('[', '').replace(']', '').replace('"', '')
+
+    fechas= fechas.split(', ')
+
+    fechas = pd.to_datetime(fechas, errors='coerce', format='%d/%m/%Y')   '''
 
     usuarios = users_data[users_data['permisos'] == 0]
     admins = users_data[users_data['permisos'] == 1]
@@ -19,9 +26,9 @@ def grafico_pass():
     time_usuarios = usuarios.groupby('username')['fechas'].diff().mean()
     time_admins = admins.groupby('username')['fechas'].diff().mean()
 
-    time_df = pd.DataFrame({'Tipo de Usuario': ['Normal', 'Administrador'],'Tiempo entre Cambios de Contraseña': [time_usuarios.days, time_admins.days]})
+    time = pd.DataFrame({'Tipo de Usuario': ['Normal', 'Administrador'],'Tiempo entre Cambios de Contraseña': [time_usuarios.days, time_admins.days]})
 
-    fig = go.Figure(data=go.Bar(x=time_df['Tipo de Usuario'], y=time_df['Tiempo entre Cambios de Contraseña']))
+    fig = go.Figure(data=go.Bar(x=time['Tipo de Usuario'], y=time['Tiempo entre Cambios de Contraseña']))
 
     fig.update_layout(xaxis_title='Tipo de Usuario',yaxis_title='Media de Tiempo')
 
@@ -62,13 +69,10 @@ def grafico_politicas():
         go.Bar(name='Proteccion de Datos', x=paginas['website'], y=paginas['proteccion_de_datos'])
     ])
 
-    # Actualizar el diseño del gráfico
     fig3.update_layout(barmode='group', xaxis_title='Página Web', yaxis_title='Cantidad')
 
-    # Convertir el gráfico a JSON
     grafico3 = fig3.to_json()
 
-    # Cerrar la conexión a la base de datos
     conn.close()
 
     return grafico3
